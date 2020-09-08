@@ -4,7 +4,7 @@
     {
         internal override void Calculate()
         {
-            Value = Sigmoid(Value);
+            Value = NeuralNetwork.ActivationFunction(Value);
         }
 
         internal void SetValue(double val)

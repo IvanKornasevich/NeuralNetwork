@@ -9,6 +9,8 @@ namespace NeuralNetwork
     {
         internal List<Layer> Layers { get; private set; }
 
+        internal static double ActivationFunction(double arg) => 1 / (1 + Math.Exp(-arg));
+
         internal double Run(params double[] args)
         {
             if (args.Length != Layers[0].Neurons.Count)

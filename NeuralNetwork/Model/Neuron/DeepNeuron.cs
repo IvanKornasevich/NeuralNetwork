@@ -22,7 +22,7 @@ namespace NeuralNetwork
             {
                 value += connection.Key.Value * connection.Value;
             }
-            Value = Sigmoid(value);
+            Value = NeuralNetwork.ActivationFunction(value);
         }
     }
 }
