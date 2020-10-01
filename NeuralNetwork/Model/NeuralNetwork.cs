@@ -12,31 +12,29 @@ namespace NeuralNetwork
 
         internal Layer OutputLayer => Layers.Last();
 
-        public NeuralNetwork(params int[] topology)
+        public NeuralNetwork(Topology topology)
         {
-            if (topology.Length < 2)
+            if (topology.LayersCount < 2)
             {
-                throw new ArgumentException($"Topology length was {topology.Length} but more than 2 expected");
+                throw new ArgumentException($"Topology length was {topology.LayersCount} but more than 2 expected");
             }
 
             foreach (var item in topology)
             {
-                if (item < 1)
+                if (item.NeuronsCount < 1)
                     throw new ArgumentException($"Layer length was {item} but more than 1 expected");
             }
 
-            Layers = new List<Layer>(topology.Length)
+            Layers = new List<Layer>(topology.LayersCount)
             {
-                new InputLayer(topology[0])
+                new InputLayer(topology.First().NeuronsCount)
             };
 
-            for (var i = 1; i < topology.Length; i++)
+            for (var i = 1; i < topology.LayersCount; i++)
             {
-                Layers.Add(new DeepLayer(Layers[i - 1], topology[i]));
+                Layers.Add(new DeepLayer(Layers[i - 1], topology[i].NeuronsCount, topology[i].ActivationFunction, topology[i].DerivativeOfActivationFunction));
             }
         }
-
-        internal static double ActivationFunction(double arg) => arg;
 
         internal IEnumerable<double> Run(List<double> args)
         {

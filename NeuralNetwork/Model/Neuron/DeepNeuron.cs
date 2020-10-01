@@ -1,11 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace NeuralNetwork
 {
     internal class DeepNeuron : Neuron
     {
-        public DeepNeuron(Layer prev, double defaultWeight = 0.5)
+        internal DeepLayer LayerOfTheNeuron { get; private set; }
+
+        public DeepNeuron(Layer prev, DeepLayer current, double defaultWeight = 0.5)
         {
+            LayerOfTheNeuron = current;
             Connections = new List<Connection>(prev.Neurons.Count);
             foreach (var neuron in prev.Neurons)
             {
@@ -21,7 +25,7 @@ namespace NeuralNetwork
             {
                 value += connection.Neuron.Value * connection.Weight;
             }
-            Value = NeuralNetwork.ActivationFunction(value - Threshold);
+            Value = LayerOfTheNeuron.ActivationFunction(value - Threshold);
         }
     }
 }

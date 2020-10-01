@@ -1,16 +1,23 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace NeuralNetwork
 {
     internal class DeepLayer : Layer
     {
-        public DeepLayer(Layer prev, int neuronsCount)
-        {
-            Neurons = new List<Neuron>(neuronsCount);
+        internal Func<double, double> ActivationFunction { get; private set; }
 
+        internal Func<double, double> DerivativeOfActivationFunction { get; private set; }
+
+        public DeepLayer(Layer prev, int neuronsCount, Func<double, double> activationFunction, Func<double, double> derivativeOfActivatoinFunction)
+        {
+            ActivationFunction = activationFunction;
+            DerivativeOfActivationFunction = derivativeOfActivatoinFunction;
+
+            Neurons = new List<Neuron>(neuronsCount);
             while (neuronsCount > 0)
             {
-                Neurons.Add(new DeepNeuron(prev));
+                Neurons.Add(new DeepNeuron(prev, this));
                 neuronsCount--;
             }
         }

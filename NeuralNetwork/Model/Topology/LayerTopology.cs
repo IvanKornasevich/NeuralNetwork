@@ -10,10 +10,13 @@ namespace NeuralNetwork
 
         internal Func<double, double> ActivationFunction { get; private set; }
 
-        public LayerTopology(int neuronsCount, Func<double, double> activationFunction)
+        internal Func<double, double> DerivativeOfActivationFunction { get; private set; }
+
+        public LayerTopology(int neuronsCount, Func<double, double> activationFunction, Func<double, double> derivativeOfActivationFunction)
         {
             NeuronsCount = neuronsCount;
             ActivationFunction = activationFunction;
+            DerivativeOfActivationFunction = derivativeOfActivationFunction;
         }
     }
 }
