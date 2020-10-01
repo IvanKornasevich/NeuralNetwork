@@ -43,7 +43,7 @@ namespace NeuralNetwork
             }
         }
 
-        public void Learn(double n)
+        public void Learn()
         {
             if (LearnSet == null)
                 throw new NullReferenceException($"There is no {nameof(LearnSet)} for the {nameof(NeuralNetwork)}");
@@ -54,26 +54,32 @@ namespace NeuralNetwork
                 var networkAnsw = NeuralNetwork.Run(learnCase.Arguments).First();
                 var outNeuron = NeuralNetwork.OutputLayer.Neurons.First();
 
-                if (i % (LearnSet.Count / 10) == 0)
+                #region logs
+
+                if (i % (LearnSet.Count / 1000) == 0)
                 {
                     Console.WriteLine($"network answer => {outNeuron.Value}");
                     Console.WriteLine($"learnCase answer => {learnCase.Answer}");
                     Console.WriteLine($"mistake => {learnCase.Answer - outNeuron.Value}\n");
                 }
+
+                #endregion logs
 
                 if (Math.Abs(learnCase.Answer - outNeuron.Value) < 1e-14)
                 {
-                    Console.WriteLine($"network answer => {outNeuron.Value}");
+                    Console.WriteLine($"network answer => {networkAnsw}");
                     Console.WriteLine($"learnCase answer => {learnCase.Answer}");
-                    Console.WriteLine($"mistake => {learnCase.Answer - outNeuron.Value}\n");
+                    Console.WriteLine($"mistake => {learnCase.Answer - networkAnsw}\n");
                     return;
                 }
 
+                double step = 1 / (1 + learnCase.Arguments.Sum(x => x * x));
+
                 foreach (var connection in outNeuron.Connections)
                 {
-                    connection.Weight -= n * (networkAnsw - learnCase.Answer) * connection.Neuron.Value;
+                    connection.Weight -= step * (networkAnsw - learnCase.Answer) * connection.Neuron.Value;
                 }
-                outNeuron.Threshold += n * (networkAnsw - learnCase.Answer);
+                outNeuron.Threshold += step * (networkAnsw - learnCase.Answer);
 
                 ++i;
             }

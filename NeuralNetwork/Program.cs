@@ -12,7 +12,7 @@ namespace NeuralNetwork
             var teacher = new Teacher(network);
 
             teacher.CreateLearnSet(0, 0.1, Func, 10000);
-            teacher.Learn(0.01);
+            teacher.Learn();
             teacher.Test();
         }
 
