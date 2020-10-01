@@ -1,47 +1,53 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 
 namespace NeuralNetwork
 {
     internal class NeuralNetwork
     {
+        internal Layer InputLayer => Layers.First();
+
         internal List<Layer> Layers { get; private set; }
+
+        internal Layer OutputLayer => Layers.Last();
 
         public NeuralNetwork(params int[] topology)
         {
-            var layers = new List<Layer>(topology.Length);
+            if (topology.Length < 2)
+            {
+                throw new ArgumentException($"Topology length was {topology.Length} but more than 2 expected");
+            }
 
-            layers.Add(new InputLayer(topology[0]));
+            foreach (var item in topology)
+            {
+                if (item < 1)
+                    throw new ArgumentException($"Layer length was {item} but more than 1 expected");
+            }
+
+            Layers = new List<Layer>(topology.Length)
+            {
+                new InputLayer(topology[0])
+            };
 
             for (var i = 1; i < topology.Length; i++)
             {
-                layers.Add(new DeepLayer(layers[i - 1], topology[i]));
+                Layers.Add(new DeepLayer(Layers[i - 1], topology[i]));
             }
-
-            layers.Add(new DeepLayer(layers.Last(), 1));
-
-            Layers = layers;
         }
 
-        //internal static double ActivationFunction(double arg) => 1 / (1 + Math.Exp(-arg));
         internal static double ActivationFunction(double arg) => arg;
 
-        internal double Run(params double[] args)
+        internal IEnumerable<double> Run(List<double> args)
         {
-            if (args.Length != Layers[0].Neurons.Count)
+            if (args.Count != InputLayer.Neurons.Count)
                 throw new ArgumentException("Input parameters count and input neurons count were not same");
 
             var i = 0;
-            Layers[0].Neurons.ForEach(x => (x as InputNeuron).SetValue(args[i++]));
+            InputLayer.Neurons.ForEach(x => x.Value = args[i++]);
 
-            for (var k = 1; k < Layers.Count; ++k)
-            {
-                Layers[k].FeedForward();
-            }
-
-            return Layers.Last().Neurons.First().Value;
+            Layers.ForEach(x => x.FeedForward());
+            return OutputLayer.Neurons.Select(x => x.Value);
         }
     }
 }

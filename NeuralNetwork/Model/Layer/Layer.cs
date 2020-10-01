@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace NeuralNetwork
 {
     internal abstract class Layer
     {
-        protected internal List<Neuron> Neurons { get; protected set; }
+        internal List<Neuron> Neurons { get; set; }
 
-        abstract internal void FeedForward();
+        internal abstract void FeedForward();
     }
 }

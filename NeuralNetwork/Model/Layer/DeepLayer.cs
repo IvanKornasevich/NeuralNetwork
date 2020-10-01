@@ -6,15 +6,13 @@ namespace NeuralNetwork
     {
         public DeepLayer(Layer prev, int neuronsCount)
         {
-            var neuronsList = new List<Neuron>(neuronsCount);
+            Neurons = new List<Neuron>(neuronsCount);
 
             while (neuronsCount > 0)
             {
-                neuronsList.Add(new DeepNeuron(prev));
+                Neurons.Add(new DeepNeuron(prev));
                 neuronsCount--;
             }
-
-            Neurons = neuronsList;
         }
 
         internal override void FeedForward()

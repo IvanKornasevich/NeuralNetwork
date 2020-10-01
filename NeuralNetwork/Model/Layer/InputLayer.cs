@@ -20,7 +20,6 @@ namespace NeuralNetwork
 
         internal override void FeedForward()
         {
-            throw new NotImplementedException();
         }
     }
 }

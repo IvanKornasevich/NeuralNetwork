@@ -4,13 +4,12 @@ namespace NeuralNetwork
 {
     internal class DeepNeuron : Neuron
     {
-        internal Dictionary<Neuron, double> Connections { get; set; } = new Dictionary<Neuron, double>();
-
-        public DeepNeuron(Layer prev, double defaultPriority = 0.5)
+        public DeepNeuron(Layer prev, double defaultWeight = 0.5)
         {
+            Connections = new List<Connection>(prev.Neurons.Count);
             foreach (var neuron in prev.Neurons)
             {
-                Connections.Add(neuron, defaultPriority);
+                Connections.Add(new Connection(neuron, defaultWeight));
             }
         }
 
@@ -20,9 +19,9 @@ namespace NeuralNetwork
 
             foreach (var connection in Connections)
             {
-                value += connection.Key.Value * connection.Value;
+                value += connection.Neuron.Value * connection.Weight;
             }
-            Value = NeuralNetwork.ActivationFunction(value);
+            Value = NeuralNetwork.ActivationFunction(value - Threshold);
         }
     }
 }

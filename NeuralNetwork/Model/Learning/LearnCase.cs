@@ -6,9 +6,9 @@ namespace NeuralNetwork
 {
     internal class LearnCase
     {
-        internal double Answer { get; set; }
+        internal double Answer { get; private set; }
 
-        internal List<double> Arguments { get; set; }
+        internal List<double> Arguments { get; private set; }
 
         public LearnCase(IEnumerable<double> args, double answer)
         {

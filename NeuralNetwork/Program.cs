@@ -4,23 +4,30 @@ using System.Linq;
 
 namespace NeuralNetwork
 {
-    internal class Program
+    internal static class Program
     {
         public static void Main()
         {
-            var network = new NeuralNetwork(5);
+            var network = new NeuralNetwork(4, 1);
+            var teacher = new Teacher(network);
 
-            var learnSet = new List<LearnCase>(15);
-            for (var i = 0; i < 15; ++i)
-            {
-                learnSet.Add(new LearnCase(new double[] { i, i, i, i, i }, Func(i)));
-            }
-
-            var teacher = new Teacher(network, learnSet);
-
-            Console.WriteLine(network.Run(-10, 3));
+            teacher.CreateLearnSet(0, 0.1, Func, 10000);
+            teacher.Learn(0.01);
+            teacher.Test();
         }
 
-        public static double Func(double x) => 1 * Math.Sin(x * 8) + 0.3;
+        public static string AnswerToString<T>(this IEnumerable<T> seq)
+        {
+            var s = new List<string>();
+
+            foreach (var item in seq)
+            {
+                s.Add(item.ToString());
+            }
+
+            return string.Join('\n', s);
+        }
+
+        public static double Func(double x) => Math.Sin(x * 8) + 0.3;
     }
 }

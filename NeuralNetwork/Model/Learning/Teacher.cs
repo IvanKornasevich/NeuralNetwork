@@ -1,23 +1,108 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace NeuralNetwork
 {
     internal class Teacher
     {
-        internal NeuralNetwork NeuralNetwork { get; private set; }
+        internal List<LearnCase> LearnSet { get; private set; }
 
-        internal IEnumerable<LearnCase> LearnSet { get; private set; }
+        private NeuralNetwork NeuralNetwork { get; set; }
 
-        public Teacher(NeuralNetwork neuralNetwork, IEnumerable<LearnCase> learnSet)
+        public Teacher(NeuralNetwork neuralNetwork)
+        {
+            NeuralNetwork = neuralNetwork;
+        }
+
+        public Teacher(NeuralNetwork neuralNetwork, List<LearnCase> learnSet)
         {
             NeuralNetwork = neuralNetwork;
             LearnSet = learnSet;
         }
 
+        internal void CreateLearnSet(double start, double step, Func<double, double> func, int count = 10000)
+        {
+            LearnSet = new List<LearnCase>();
+            var dataSet = new List<double>();
+            for (var i = start; dataSet.Count < count + NeuralNetwork.InputLayer.Neurons.Count; i += step)
+            {
+                dataSet.Add(func(i));
+            }
+
+            for (var i = 0; i < dataSet.Count - NeuralNetwork.InputLayer.Neurons.Count; ++i)
+            {
+                var caseArgs = new List<double>();
+                int j;
+                for (j = 0; j < NeuralNetwork.InputLayer.Neurons.Count; ++j)
+                {
+                    caseArgs.Add(dataSet[i + j]);
+                }
+                LearnSet.Add(new LearnCase(caseArgs, dataSet[i + j]));
+            }
+        }
+
         public void Learn(double n)
         {
+            if (LearnSet == null)
+                throw new NullReferenceException($"There is no {nameof(LearnSet)} for the {nameof(NeuralNetwork)}");
+
+            var i = 0;
+            foreach (var learnCase in LearnSet)
+            {
+                var networkAnsw = NeuralNetwork.Run(learnCase.Arguments).First();
+                var outNeuron = NeuralNetwork.OutputLayer.Neurons.First();
+
+                if (i % (LearnSet.Count / 10) == 0)
+                {
+                    Console.WriteLine($"network answer => {outNeuron.Value}");
+                    Console.WriteLine($"learnCase answer => {learnCase.Answer}");
+                    Console.WriteLine($"mistake => {learnCase.Answer - outNeuron.Value}\n");
+                }
+
+                if (Math.Abs(learnCase.Answer - outNeuron.Value) < 1e-14)
+                {
+                    Console.WriteLine($"network answer => {outNeuron.Value}");
+                    Console.WriteLine($"learnCase answer => {learnCase.Answer}");
+                    Console.WriteLine($"mistake => {learnCase.Answer - outNeuron.Value}\n");
+                    return;
+                }
+
+                foreach (var connection in outNeuron.Connections)
+                {
+                    connection.Weight -= n * (networkAnsw - learnCase.Answer) * connection.Neuron.Value;
+                }
+                outNeuron.Threshold += n * (networkAnsw - learnCase.Answer);
+
+                ++i;
+            }
+        }
+
+        public void Test()
+        {
+            var networkArgs = new List<double>(LearnSet.First().Arguments);
+
+            var j = 0;
+
+            foreach (var learnCase in LearnSet)
+            {
+                var answ = NeuralNetwork.Run(networkArgs).First();
+
+                if (++j % 100 == 0)
+                {
+                    Console.WriteLine($"Mistake = {answ - learnCase.Answer}");
+                }
+
+                var networkInputCount = NeuralNetwork.InputLayer.Neurons.Count;
+
+                for (var i = 0; i < networkInputCount - 1; ++i)
+                {
+                    networkArgs[i] = networkArgs[i + 1];
+                }
+
+                networkArgs[networkInputCount - 1] = answ;
+            }
         }
     }
 }
