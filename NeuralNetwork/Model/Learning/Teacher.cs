@@ -52,6 +52,7 @@ namespace NeuralNetwork
             foreach (var learnCase in LearnSet)
             {
                 var networkAnsw = NeuralNetwork.Run(learnCase.Arguments).First();
+
                 var outNeuron = NeuralNetwork.OutputLayer.Neurons.First();
 
                 if (i % (LearnSet.Count / 10) == 0)
