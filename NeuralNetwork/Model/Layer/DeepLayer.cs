@@ -1,20 +1,21 @@
-﻿using System;
+﻿using NeuralNetwork.Model.Layer;
+using System;
 using System.Collections.Generic;
 
 namespace NeuralNetwork
 {
-    internal class DeepLayer : Layer
+    internal class DeepLayer : Layer, IDeepLayer
     {
-        internal Func<double, double> ActivationFunction { get; private set; }
+        public Func<double, double> ActivationFunction { get; private set; }
 
-        internal Func<double, double> DerivativeOfActivationFunction { get; private set; }
+        public Func<double, double> DerivativeOfActivationFunction { get; private set; }
 
-        public DeepLayer(Layer prev, int neuronsCount, Func<double, double> activationFunction, Func<double, double> derivativeOfActivatoinFunction)
+        public DeepLayer(ILayer prev, int neuronsCount, Func<double, double> activationFunction, Func<double, double> derivativeOfActivatoinFunction)
         {
             ActivationFunction = activationFunction;
             DerivativeOfActivationFunction = derivativeOfActivatoinFunction;
 
-            Neurons = new List<Neuron>(neuronsCount);
+            Neurons = new List<INeuron>(neuronsCount);
             while (neuronsCount > 0)
             {
                 Neurons.Add(new DeepNeuron(prev, this));
@@ -22,7 +23,7 @@ namespace NeuralNetwork
             }
         }
 
-        internal override void FeedForward()
+        public override void FeedForward()
         {
             foreach (var neuron in Neurons)
             {

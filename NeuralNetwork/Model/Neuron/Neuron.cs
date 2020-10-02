@@ -3,14 +3,16 @@ using System.Collections.Generic;
 
 namespace NeuralNetwork
 {
-    abstract internal class Neuron
+    abstract internal class Neuron : INeuron
     {
-        internal List<Connection> Connections { get; set; }
+        public List<Connection> Connections { get; private protected set; }
 
-        internal double Value { get; set; }
+        public double Threshold { get; set; }
 
-        internal double Threshold { get; set; }
+        public double Value { get; set; }
 
-        internal abstract void Calculate();
+        public double ValueBeforeActivation { get; private protected set; }
+
+        public abstract void Calculate();
     }
 }

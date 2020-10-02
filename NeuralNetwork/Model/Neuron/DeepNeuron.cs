@@ -1,13 +1,15 @@
-﻿using System;
+﻿using NeuralNetwork.Model.Layer;
+using NeuralNetwork.Model.Neuron;
+using System;
 using System.Collections.Generic;
 
 namespace NeuralNetwork
 {
-    internal class DeepNeuron : Neuron
+    internal class DeepNeuron : Neuron, IDeepNeuron
     {
-        internal DeepLayer LayerOfTheNeuron { get; private set; }
+        public IDeepLayer LayerOfTheNeuron { get; private set; }
 
-        public DeepNeuron(Layer prev, DeepLayer current, double defaultWeight = 0.5)
+        public DeepNeuron(ILayer prev, IDeepLayer current, double defaultWeight = 0.5)
         {
             LayerOfTheNeuron = current;
             Connections = new List<Connection>(prev.Neurons.Count);
@@ -17,7 +19,7 @@ namespace NeuralNetwork
             }
         }
 
-        internal override void Calculate()
+        public override void Calculate()
         {
             var value = 0d;
 
@@ -25,6 +27,9 @@ namespace NeuralNetwork
             {
                 value += connection.Neuron.Value * connection.Weight;
             }
+
+            ValueBeforeActivation = value - Threshold;
+
             Value = LayerOfTheNeuron.ActivationFunction(value - Threshold);
         }
     }

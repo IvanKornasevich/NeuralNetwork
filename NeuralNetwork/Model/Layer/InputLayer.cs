@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NeuralNetwork.Model.Layer;
+using System;
 using System.Collections.Generic;
 
 namespace NeuralNetwork
@@ -7,18 +8,16 @@ namespace NeuralNetwork
     {
         public InputLayer(int neuronsCount)
         {
-            var neuronsList = new List<Neuron>(neuronsCount);
+            Neurons = new List<INeuron>(neuronsCount);
 
             while (neuronsCount > 0)
             {
-                neuronsList.Add(new InputNeuron());
+                Neurons.Add(new InputNeuron());
                 neuronsCount--;
             }
-
-            Neurons = neuronsList;
         }
 
-        internal override void FeedForward()
+        public override void FeedForward()
         {
         }
     }

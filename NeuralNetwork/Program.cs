@@ -8,17 +8,22 @@ namespace NeuralNetwork
     {
         public static void Main()
         {
-            var topology = new Topology();
-            topology.AddLayer(new LayerTopology(4, x => x, x => 1));
-            topology.AddLayer(new LayerTopology(4, Sigmoid, DerivativeOfSigmoid));
-            topology.AddLayer(new LayerTopology(4, x => x, x => 1));
+            var topology = new Topology
+            {
+                new LayerTopology(4, x => x, x => 1),
+                new LayerTopology(10, Sigmoid, DerivativeOfSigmoid),
+                new LayerTopology(4, x => x, x => 1)
+            };
 
             var network = new NeuralNetwork(topology);
             var teacher = new Teacher(network);
 
             teacher.CreateLearnSet(0, 0.1, Func, 1000);
-            teacher.Learn(0.01);
-            teacher.Test();
+
+            for (var i = 0; i < 100; ++i)
+            {
+                teacher.Learn(0.1);
+            }
         }
 
         public static string AnswerToString<T>(this IEnumerable<T> seq)

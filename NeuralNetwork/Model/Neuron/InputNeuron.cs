@@ -2,7 +2,7 @@
 {
     internal class InputNeuron : Neuron
     {
-        internal override void Calculate()
+        public override void Calculate()
         {
         }
     }
