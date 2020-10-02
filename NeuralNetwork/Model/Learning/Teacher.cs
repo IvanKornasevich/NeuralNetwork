@@ -66,15 +66,14 @@ namespace NeuralNetwork
                 {
                     if (neuron is IDeepNeuron deepNeuron)
                     {
-                        var delta = currentError * deepNeuron.LayerOfTheNeuron.DerivativeOfActivationFunction(deepNeuron.Value);
-
                         foreach (var connection in deepNeuron.Connections)
                         {
-                            connection.Weight -= connection.Neuron.ValueBeforeActivation * delta * learnRate;
-
-                            BackProp(connection.Neuron, connection.Weight * delta);
+                            connection.Weight -= learnRate * currentError * deepNeuron.LayerOfTheNeuron.DerivativeOfActivationFunction(deepNeuron.ValueBeforeActivation) * deepNeuron.Value;
                         }
+                        deepNeuron.Threshold += learnRate * currentError * deepNeuron.LayerOfTheNeuron.DerivativeOfActivationFunction(deepNeuron.ValueBeforeActivation);
                     }
+
+                    currentError =
                 }
 
                 if (its)

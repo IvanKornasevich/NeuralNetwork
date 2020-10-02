@@ -12,7 +12,7 @@ namespace NeuralNetwork
             {
                 new LayerTopology(4, x => x, x => 1),
                 new LayerTopology(10, Sigmoid, DerivativeOfSigmoid),
-                new LayerTopology(4, x => x, x => 1)
+                new LayerTopology(1, x => x, x => 1)
             };
 
             var network = new NeuralNetwork(topology);
