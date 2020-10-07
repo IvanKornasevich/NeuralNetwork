@@ -51,7 +51,7 @@ namespace NeuralNetwork
             if (LearnSet == null)
                 throw new NullReferenceException($"There is no {nameof(LearnSet)} for the {nameof(NeuralNetwork)}");
 
-            var its = true;
+            var i = 0;
             foreach (var learnCase in LearnSet)
             {
                 var networkAnsw = NeuralNetwork.Run(learnCase.Arguments).First();
@@ -62,53 +62,30 @@ namespace NeuralNetwork
 
                 BackProp(outNeuron, networkAnsw - learnCaseAnsw);
 
-                void BackProp(INeuron neuron, double currentError)
-                {
-                    if (neuron is IDeepNeuron deepNeuron)
-                    {
-                        foreach (var connection in deepNeuron.Connections)
-                        {
-                            connection.Weight -= learnRate * currentError * deepNeuron.LayerOfTheNeuron.DerivativeOfActivationFunction(deepNeuron.ValueBeforeActivation) * deepNeuron.Value;
-                        }
-                        deepNeuron.Threshold += learnRate * currentError * deepNeuron.LayerOfTheNeuron.DerivativeOfActivationFunction(deepNeuron.ValueBeforeActivation);
-                    }
-
-                    currentError =
-                }
-
-                if (its)
+                if (i % 567 == 0)
                 {
                     Console.WriteLine($"network answer => {outNeuron.Value}");
                     Console.WriteLine($"learnCase answer => {learnCase.Answer}");
                     Console.WriteLine($"mistake => {learnCase.Answer - outNeuron.Value}\n");
-                    its = false;
                 }
+                ++i;
             }
-        }
 
-        public void Test()
-        {
-            var networkArgs = new List<double>(LearnSet.First().Arguments);
-
-            var j = 0;
-
-            foreach (var learnCase in LearnSet)
+            void BackProp(INeuron neuron, double currentError)
             {
-                var answ = NeuralNetwork.Run(networkArgs).First();
-
-                if (++j % 100 == 0)
+                if (neuron is IDeepNeuron deepNeuron)
                 {
-                    Console.WriteLine($"Mistake = {answ - learnCase.Answer}");
+                    var delta = currentError * deepNeuron.LayerOfTheNeuron.DerivativeOfActivationFunction(deepNeuron.ValueBeforeActivation);
+
+                    foreach (var connection in deepNeuron.Connections)
+                    {
+                        connection.Weight -= learnRate * connection.Neuron.Value * delta;
+
+                        var newError = connection.Weight * delta;
+                        BackProp(connection.Neuron, newError);
+                    }
+                    //deepNeuron.Threshold += learnRate * currentError * deepNeuron.LayerOfTheNeuron.DerivativeOfActivationFunction(deepNeuron.ValueBeforeActivation);
                 }
-
-                var networkInputCount = NeuralNetwork.InputLayer.Neurons.Count;
-
-                for (var i = 0; i < networkInputCount - 1; ++i)
-                {
-                    networkArgs[i] = networkArgs[i + 1];
-                }
-
-                networkArgs[networkInputCount - 1] = answ;
             }
         }
     }

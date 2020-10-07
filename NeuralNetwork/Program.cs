@@ -10,8 +10,8 @@ namespace NeuralNetwork
         {
             var topology = new Topology
             {
-                new LayerTopology(4, x => x, x => 1),
-                new LayerTopology(10, Sigmoid, DerivativeOfSigmoid),
+                new LayerTopology(10, x => x, x => 1),
+                new LayerTopology(4, Sigmoid, DerivativeOfSigmoid),
                 new LayerTopology(1, x => x, x => 1)
             };
 
@@ -20,7 +20,7 @@ namespace NeuralNetwork
 
             teacher.CreateLearnSet(0, 0.1, Func, 1000);
 
-            for (var i = 0; i < 100; ++i)
+            for (var i = 0; i < 5000; ++i)
             {
                 teacher.Learn(0.1);
             }
