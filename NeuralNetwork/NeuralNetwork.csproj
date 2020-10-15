@@ -5,4 +5,8 @@
     <OutputType>Exe</OutputType>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="Model\Learning\Teacher.cs~RF2410ab4b.TMP" />
+  </ItemGroup>
+
 </Project>

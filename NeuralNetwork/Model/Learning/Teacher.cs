@@ -14,6 +14,8 @@ namespace NeuralNetwork
 
         private INeuralNetwork NeuralNetwork { get; set; }
 
+        private int idx = 0;
+
         public Teacher(INeuralNetwork neuralNetwork)
         {
             NeuralNetwork = neuralNetwork;
@@ -51,7 +53,6 @@ namespace NeuralNetwork
             if (LearnSet == null)
                 throw new NullReferenceException($"There is no {nameof(LearnSet)} for the {nameof(NeuralNetwork)}");
 
-            var i = 0;
             foreach (var learnCase in LearnSet)
             {
                 var networkAnsw = NeuralNetwork.Run(learnCase.Arguments).First();
@@ -62,13 +63,13 @@ namespace NeuralNetwork
 
                 BackProp(outNeuron, networkAnsw - learnCaseAnsw);
 
-                if (i % 567 == 0)
+                if (idx % 111111 == 0)
                 {
                     Console.WriteLine($"network answer => {outNeuron.Value}");
                     Console.WriteLine($"learnCase answer => {learnCase.Answer}");
                     Console.WriteLine($"mistake => {learnCase.Answer - outNeuron.Value}\n");
                 }
-                ++i;
+                ++idx;
             }
 
             void BackProp(INeuron neuron, double currentError)
@@ -84,7 +85,7 @@ namespace NeuralNetwork
                         var newError = connection.Weight * delta;
                         BackProp(connection.Neuron, newError);
                     }
-                    //deepNeuron.Threshold += learnRate * currentError * deepNeuron.LayerOfTheNeuron.DerivativeOfActivationFunction(deepNeuron.ValueBeforeActivation);
+                    deepNeuron.Threshold += learnRate * currentError * deepNeuron.LayerOfTheNeuron.DerivativeOfActivationFunction(deepNeuron.ValueBeforeActivation);
                 }
             }
         }

@@ -18,9 +18,9 @@ namespace NeuralNetwork
             var network = new NeuralNetwork(topology);
             var teacher = new Teacher(network);
 
-            teacher.CreateLearnSet(0, 0.1, Func, 1000);
+            teacher.CreateLearnSet(0, 0.1, Func, 5000);
 
-            for (var i = 0; i < 5000; ++i)
+            for (var i = 0; i < 2000; ++i)
             {
                 teacher.Learn(0.1);
             }
