@@ -4,7 +4,7 @@ using System.Text;
 
 namespace NeuralNetwork.Model.Layer
 {
-    internal interface IDeepLayer
+    internal interface IDeepLayer : ILayer
     {
         Func<double, double> ActivationFunction { get; }
 

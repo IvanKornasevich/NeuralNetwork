@@ -61,7 +61,9 @@ namespace NeuralNetwork
 
                 var outNeuron = NeuralNetwork.OutputLayer.Neurons.First();
 
-                BackProp(outNeuron, networkAnsw - learnCaseAnsw);
+                ((DeepNeuron)outNeuron).Error = networkAnsw - learnCaseAnsw;
+
+                BackProtIteratively(NeuralNetwork.OutputLayer);
 
                 if (idx % 111111 == 0)
                 {
@@ -72,9 +74,51 @@ namespace NeuralNetwork
                 ++idx;
             }
 
-            void BackProp(INeuron neuron, double currentError)
+            void BackProtIteratively(ILayer currentLayer)
             {
-                if (neuron is IDeepNeuron deepNeuron)
+                if (currentLayer is IDeepLayer deepLayer)
+                {
+                    foreach (IDeepNeuron deepNeuron in deepLayer.Neurons)
+                    {
+                        var delta = deepNeuron.Error * deepNeuron.LayerOfTheNeuron.DerivativeOfActivationFunction(deepNeuron.ValueBeforeActivation);
+
+                        foreach (var connection in deepNeuron.Connections)
+                        {
+                            if (connection.Neuron is IDeepNeuron prevDeepNeuron)
+                            {
+                                prevDeepNeuron.Error = connection.Weight * delta;
+                            }
+                            else return;
+                        }
+                    }
+
+                    foreach (IDeepNeuron deepNeuron in deepLayer.Neurons)
+                    {
+                        var delta = deepNeuron.Error * deepNeuron.LayerOfTheNeuron.DerivativeOfActivationFunction(deepNeuron.ValueBeforeActivation);
+
+                        double learnRate2 = deepLayer.Neurons.Sum(x => Math.Pow(((IDeepNeuron)x).Error, 2) *
+                                            deepLayer.DerivativeOfActivationFunction(x.ValueBeforeActivation)) /
+                                            (deepLayer.DerivativeOfActivationFunction(0) *
+                                            (1 + deepLayer.Neurons.Sum(x => Math.Pow(((IDeepNeuron)x).Error, 2) *
+                                             Math.Pow(deepLayer.DerivativeOfActivationFunction(x.ValueBeforeActivation), 2))));
+
+                        foreach (var connection in deepNeuron.Connections)
+                        {
+                            connection.Weight -= learnRate * connection.Neuron.Value * delta;
+
+                            if (connection.Neuron is IDeepNeuron prevDeepNeuron)
+                            {
+                                prevDeepNeuron.Error = connection.Weight * delta;
+                            }
+                        }
+                        deepNeuron.Threshold += learnRate * deepNeuron.Error * deepNeuron.LayerOfTheNeuron.DerivativeOfActivationFunction(deepNeuron.ValueBeforeActivation);
+                    }
+                }
+            }
+
+            void BackProp(INeuron currentNeuron, double currentError)
+            {
+                if (currentNeuron is DeepNeuron deepNeuron)
                 {
                     var delta = currentError * deepNeuron.LayerOfTheNeuron.DerivativeOfActivationFunction(deepNeuron.ValueBeforeActivation);
 

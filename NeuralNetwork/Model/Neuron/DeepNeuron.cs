@@ -9,6 +9,8 @@ namespace NeuralNetwork
     {
         public IDeepLayer LayerOfTheNeuron { get; private set; }
 
+        public double Error { get; set; }
+
         public DeepNeuron(ILayer prev, IDeepLayer current, double defaultWeight = 0.1)
         {
             LayerOfTheNeuron = current;

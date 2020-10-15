@@ -8,5 +8,7 @@ namespace NeuralNetwork.Model.Neuron
     internal interface IDeepNeuron : INeuron
     {
         IDeepLayer LayerOfTheNeuron { get; }
+
+        double Error { get; set; }
     }
 }

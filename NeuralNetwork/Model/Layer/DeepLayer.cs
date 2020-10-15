@@ -1,4 +1,5 @@
 ﻿using NeuralNetwork.Model.Layer;
+using NeuralNetwork.Model.Neuron;
 using System;
 using System.Collections.Generic;
 
