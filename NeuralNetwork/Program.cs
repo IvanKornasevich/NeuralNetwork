@@ -8,7 +8,7 @@ namespace NeuralNetwork
     {
         public static void Main()
         {
-            var topology = new Topology
+            var topology = new NetworkTopology
             {
                 new LayerTopology(10, x => x, x => 1),
                 new LayerTopology(4, Sigmoid, DerivativeOfSigmoid),

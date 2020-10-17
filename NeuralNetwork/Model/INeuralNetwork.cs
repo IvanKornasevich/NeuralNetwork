@@ -4,12 +4,16 @@ using System.Text;
 
 namespace NeuralNetwork.Model
 {
-    internal interface INeuralNetwork
+    internal interface INeuralNetwork : IEnumerable<ILayer>
     {
-        List<double> Run(List<double> args);
-
         ILayer InputLayer { get; }
 
         ILayer OutputLayer { get; }
+
+        public IList<ILayer> Layers { get; }
+
+        IList<double> Run(IList<double> args);
+
+        public ILayer this[int idx] { get; }
     }
 }

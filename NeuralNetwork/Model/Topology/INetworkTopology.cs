@@ -4,8 +4,8 @@ using System.Text;
 
 namespace NeuralNetwork.Model.Topology
 {
-    internal interface ITopology
+    internal interface INetworkTopology
     {
-        List<ILayer> GenerateLayers();
+        IList<ILayer> GenerateLayers();
     }
 }

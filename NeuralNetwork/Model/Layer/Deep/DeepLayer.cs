@@ -11,7 +11,12 @@ namespace NeuralNetwork
 
         public Func<double, double> DerivativeOfActivationFunction { get; private set; }
 
-        public DeepLayer(ILayer prev, int neuronsCount, Func<double, double> activationFunction, Func<double, double> derivativeOfActivatoinFunction)
+        Func<double, double> IDeepLayer.ActivationFunction => throw new NotImplementedException();
+
+        Func<double, double> IDeepLayer.DerivativeOfActivationFunction => throw new NotImplementedException();
+
+        public DeepLayer(ILayer prev, int neuronsCount, Func<double, double> activationFunction,
+                        Func<double, double> derivativeOfActivatoinFunction)
         {
             ActivationFunction = activationFunction;
             DerivativeOfActivationFunction = derivativeOfActivatoinFunction;
@@ -30,6 +35,11 @@ namespace NeuralNetwork
             {
                 neuron.Calculate();
             }
+        }
+
+        public override IEnumerator<INeuron> GetEnumerator()
+        {
+            return Neurons.GetEnumerator();
         }
     }
 }

@@ -4,10 +4,10 @@ using System.Text;
 
 namespace NeuralNetwork
 {
-    internal interface ILayer
+    internal interface ILayer : IEnumerable<INeuron>
     {
-        void FeedForward();
+        IList<INeuron> Neurons { get; }
 
-        List<INeuron> Neurons { get; }
+        void FeedForward();
     }
 }

@@ -1,14 +1,15 @@
-﻿using System;
+﻿using NeuralNetwork.Model.Neuron.Connection;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace NeuralNetwork
 {
-    internal class Connection
+    internal class Connection : IConnection
     {
-        internal INeuron Neuron { get; private set; }
+        public INeuron Neuron { get; private set; }
 
-        internal double Weight { get; set; }
+        public double Weight { get; set; }
 
         public Connection(INeuron neuron, double weight = 0.5)
         {
