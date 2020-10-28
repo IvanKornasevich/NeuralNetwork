@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NeuralNetwork.Model.Neuron;
+using System;
 using System.Collections.Generic;
 using System.Text;
 

@@ -2,6 +2,7 @@
 using NeuralNetwork.Model.Layer.Input;
 using NeuralNetwork.Model.Neuron.Input;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace NeuralNetwork
@@ -10,7 +11,7 @@ namespace NeuralNetwork
     {
         public InputLayer(int neuronsCount)
         {
-            Neurons = new List<IInputNeuron>(neuronsCount);
+            Neurons = new List<INeuron>(neuronsCount);
 
             while (neuronsCount > 0)
             {
@@ -19,13 +20,18 @@ namespace NeuralNetwork
             }
         }
 
-        public override void FeedForward()
+        public void FeedForward()
         {
         }
 
-        public override IEnumerator<ILayer> GetEnumerator()
+        public IEnumerator<INeuron> GetEnumerator()
         {
-            throw new NotImplementedException();
+            return Neurons.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return this.GetEnumerator();
         }
     }
 }

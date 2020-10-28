@@ -1,6 +1,7 @@
 ﻿using NeuralNetwork.Model.Layer;
 using NeuralNetwork.Model.Neuron;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace NeuralNetwork
@@ -10,10 +11,6 @@ namespace NeuralNetwork
         public Func<double, double> ActivationFunction { get; private set; }
 
         public Func<double, double> DerivativeOfActivationFunction { get; private set; }
-
-        Func<double, double> IDeepLayer.ActivationFunction => throw new NotImplementedException();
-
-        Func<double, double> IDeepLayer.DerivativeOfActivationFunction => throw new NotImplementedException();
 
         public DeepLayer(ILayer prev, int neuronsCount, Func<double, double> activationFunction,
                         Func<double, double> derivativeOfActivatoinFunction)
@@ -29,7 +26,7 @@ namespace NeuralNetwork
             }
         }
 
-        public override void FeedForward()
+        public void FeedForward()
         {
             foreach (var neuron in Neurons)
             {
@@ -37,9 +34,14 @@ namespace NeuralNetwork
             }
         }
 
-        public override IEnumerator<INeuron> GetEnumerator()
+        public IEnumerator<INeuron> GetEnumerator()
         {
             return Neurons.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return this.GetEnumerator();
         }
     }
 }

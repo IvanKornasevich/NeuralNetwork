@@ -66,10 +66,10 @@ namespace NeuralNetwork
 
                 BackProp(outNeuron, networkAnsw - learnCaseAnsw[0], learnRate);
 
-                if (counter % 111111 == 0)
+                if (counter % 1111111 == 0)
                 {
                     Console.WriteLine($"network answer => {outNeuron.Value}");
-                    Console.WriteLine($"learnCase answer => {learnCase.Answer}");
+                    Console.WriteLine($"learnCase answer => {learnCase.Answer[0]}");
                     Console.WriteLine($"mistake => {learnCase.Answer[0] - outNeuron.Value}\n");
                 }
                 ++counter;
