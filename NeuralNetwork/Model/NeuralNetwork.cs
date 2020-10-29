@@ -33,10 +33,8 @@ namespace NeuralNetwork
                 layer.FeedForward();
             }
 
-            return OutputLayer.Neurons.Select(x => x.Value).ToArray();
+            return OutputLayer.Neurons.Select(x => x.Value).ToList();
         }
-
-        public ILayer this[int idx] => Layers[idx];
 
         public IEnumerator<ILayer> GetEnumerator()
         {
@@ -47,5 +45,7 @@ namespace NeuralNetwork
         {
             return this.GetEnumerator();
         }
+
+        public ILayer this[int idx] => Layers[idx];
     }
 }

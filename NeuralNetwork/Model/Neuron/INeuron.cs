@@ -11,6 +11,16 @@ namespace NeuralNetwork
 
         double Value { get; set; }
 
+        double Error { get; set; }
+
+        double ValueBeforeActivation { get; }
+
+        IList<IConnection> Connections { get; }
+
+        Func<double, double> ActivFunc { get; }
+
+        Func<double, double> DerivativeOfActivFunc { get; }
+
         void Calculate();
     }
 }

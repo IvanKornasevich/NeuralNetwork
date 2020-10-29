@@ -9,15 +9,15 @@ namespace NeuralNetwork
     {
         public int NeuronsCount { get; private set; }
 
-        public Func<double, double> ActivationFunction { get; private set; }
+        public Func<double, double> ActivFunc { get; private set; }
 
-        public Func<double, double> DerivativeOfActivationFunction { get; private set; }
+        public Func<double, double> DerivativeOfActivFunc { get; private set; }
 
-        public LayerTopology(int neuronsCount, Func<double, double> activationFunction, Func<double, double> derivativeOfActivationFunction)
+        public LayerTopology(int neuronsCount, Func<double, double> activFunc, Func<double, double> derivativeOfActivFunc)
         {
             NeuronsCount = neuronsCount;
-            ActivationFunction = activationFunction;
-            DerivativeOfActivationFunction = derivativeOfActivationFunction;
+            ActivFunc = activFunc;
+            DerivativeOfActivFunc = derivativeOfActivFunc;
         }
     }
 }

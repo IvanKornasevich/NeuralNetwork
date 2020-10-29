@@ -8,18 +8,17 @@ namespace NeuralNetwork
 {
     internal class DeepNeuron : Neuron, IDeepNeuron
     {
-        public IList<IConnection> Connections { get; private set; }
-        public IDeepLayer LayerOfTheNeuron { get; private set; }
-        public double ValueBeforeActivation { get; set; }
-        public double Error { get; set; }
-
-        public DeepNeuron(ILayer prev, IDeepLayer current, double defaultWeight = 0.1)
+        public DeepNeuron(ILayer prevLayer, Func<double, double> activFunc, Func<double, double> derivativeOfActiveFunc)
+            : base(activFunc, derivativeOfActiveFunc)
         {
-            LayerOfTheNeuron = current;
-            Connections = new List<IConnection>(prev.Neurons.Count);
-            foreach (var neuron in prev.Neurons)
+            Connections = new List<IConnection>(prevLayer.Neurons.Count);
+
+            ActivFunc = activFunc;
+            DerivativeOfActivFunc = derivativeOfActiveFunc;
+
+            foreach (var neuron in prevLayer.Neurons)
             {
-                Connections.Add(new Connection(neuron, defaultWeight));
+                Connections.Add(new Connection(neuron));
             }
         }
 
@@ -34,7 +33,7 @@ namespace NeuralNetwork
 
             ValueBeforeActivation = value - Threshold;
 
-            Value = LayerOfTheNeuron.ActivationFunction(ValueBeforeActivation);
+            Value = this.ActivFunc(ValueBeforeActivation);
         }
     }
 }

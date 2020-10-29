@@ -8,8 +8,8 @@ namespace NeuralNetwork.Model.Topology.Layer
     {
         int NeuronsCount { get; }
 
-        Func<double, double> ActivationFunction { get; }
+        Func<double, double> ActivFunc { get; }
 
-        Func<double, double> DerivativeOfActivationFunction { get; }
+        Func<double, double> DerivativeOfActivFunc { get; }
     }
 }

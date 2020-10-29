@@ -13,10 +13,9 @@ namespace NeuralNetwork
         {
             Neurons = new List<INeuron>(neuronsCount);
 
-            while (neuronsCount > 0)
+            for (var i = 0; i < neuronsCount; ++i)
             {
-                Neurons.Add(new InputNeuron());
-                neuronsCount--;
+                Neurons.Add(new InputNeuron(x => x, x => 1));
             }
         }
 

@@ -8,21 +8,13 @@ namespace NeuralNetwork
 {
     internal class DeepLayer : Layer, IDeepLayer
     {
-        public Func<double, double> ActivationFunction { get; private set; }
-
-        public Func<double, double> DerivativeOfActivationFunction { get; private set; }
-
-        public DeepLayer(ILayer prev, int neuronsCount, Func<double, double> activationFunction,
-                        Func<double, double> derivativeOfActivatoinFunction)
+        public DeepLayer(ILayer prev, int neuronsCount, Func<double, double> activFunc,
+                        Func<double, double> derivativeOfActivFunc)
         {
-            ActivationFunction = activationFunction;
-            DerivativeOfActivationFunction = derivativeOfActivatoinFunction;
-
             Neurons = new List<INeuron>(neuronsCount);
-            while (neuronsCount > 0)
+            for (var i = 0; i < neuronsCount; ++i)
             {
-                Neurons.Add(new DeepNeuron(prev, this));
-                neuronsCount--;
+                Neurons.Add(new DeepNeuron(prev, activFunc, derivativeOfActivFunc));
             }
         }
 

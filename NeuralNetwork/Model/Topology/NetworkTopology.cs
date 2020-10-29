@@ -29,13 +29,11 @@ namespace NeuralNetwork
             {
                 var currentTopology = LayersTopology[i];
                 layers.Add(new DeepLayer(layers[i - 1], currentTopology.NeuronsCount,
-                                        currentTopology.ActivationFunction, currentTopology.DerivativeOfActivationFunction));
+                                        currentTopology.ActivFunc, currentTopology.DerivativeOfActivFunc));
             }
 
             return layers;
         }
-
-        internal ILayerTopology this[int i] => LayersTopology[i];
 
         public IEnumerator<ILayerTopology> GetEnumerator()
         {
@@ -46,5 +44,7 @@ namespace NeuralNetwork
         {
             return this.GetEnumerator();
         }
+
+        internal ILayerTopology this[int i] => LayersTopology[i];
     }
 }
