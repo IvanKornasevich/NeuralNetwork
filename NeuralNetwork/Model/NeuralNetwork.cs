@@ -10,7 +10,9 @@ namespace NeuralNetwork
     internal class NeuralNetwork : INeuralNetwork
     {
         public ILayer InputLayer => Layers.First();
+
         public ILayer OutputLayer => Layers.Last();
+
         public IList<ILayer> Layers { get; private set; }
 
         public NeuralNetwork(INetworkTopology topology)

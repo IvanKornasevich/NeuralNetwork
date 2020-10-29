@@ -78,7 +78,7 @@ namespace NeuralNetwork
 
         private void BackProp(INeuron currentNeuron, double currentError, double learnRate)
         {
-            if (currentNeuron is DeepNeuron deepNeuron)
+            if (currentNeuron is IDeepNeuron deepNeuron)
             {
                 var delta = currentError * deepNeuron.LayerOfTheNeuron.DerivativeOfActivationFunction(deepNeuron.ValueBeforeActivation);
 
