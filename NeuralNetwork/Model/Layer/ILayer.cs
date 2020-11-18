@@ -9,5 +9,7 @@ namespace NeuralNetwork
         IList<INeuron> Neurons { get; }
 
         void FeedForward();
+
+        INeuron this[int i] { get; }
     }
 }

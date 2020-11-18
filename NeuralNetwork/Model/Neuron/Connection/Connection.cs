@@ -11,7 +11,7 @@ namespace NeuralNetwork
 
         public double Weight { get; set; }
 
-        public Connection(INeuron neuron, double weight = 0.5)
+        public Connection(INeuron neuron, double weight = 0.1)
         {
             Neuron = neuron;
             Weight = weight;

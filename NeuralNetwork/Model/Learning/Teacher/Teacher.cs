@@ -6,6 +6,7 @@ using NeuralNetwork.Model.Neuron;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace NeuralNetwork
@@ -66,7 +67,7 @@ namespace NeuralNetwork
 
                 BackProp(outNeuron, networkAnsw - learnCaseAnsw[0], learnRate);
 
-                if (counter % 1111111 == 0)
+                if (counter % 11111 == 0)
                 {
                     Console.WriteLine($"network answer => {outNeuron.Value}");
                     Console.WriteLine($"learnCase answer => {learnCase.Answer[0]}");
@@ -95,10 +96,92 @@ namespace NeuralNetwork
 
         public void Learn()
         {
-            for (var i = NeuralNetwork.Layers.Count; i > 1; --i)
+            if (LearnSet == null)
+                throw new NullReferenceException($"There is no {nameof(LearnSet)} for the {nameof(NeuralNetwork)}");
+
+            foreach (var learnCase in LearnSet)
             {
-                foreach (IDeepNeuron deepNeuron in NeuralNetwork.Layers[i])
+                BackPropAdaptive(learnCase);
+
+                var outNeuron = NeuralNetwork.OutputLayer.Neurons.First();
+                if (counter % 11111 == 0)
                 {
+                    Console.WriteLine($"network answer => {outNeuron.Value}");
+                    Console.WriteLine($"learnCase answer => {learnCase.Answer[0]}");
+                    Console.WriteLine($"mistake => {learnCase.Answer[0] - outNeuron.Value}\n");
+                }
+                ++counter;
+            }
+        }
+
+        private void BackPropAdaptive(ILearnCase learnCase)
+        {
+            NeuralNetwork.Run(learnCase.Arguments).First();
+
+            CalculateErrors();
+
+            for (int i = NeuralNetwork.Layers.Count - 1; i > 0; --i)
+            {
+                var layer = NeuralNetwork[i];
+
+                var learnRate = getLearnRateForLayer(layer);
+
+                foreach (var neuron in layer)
+                {
+                    var delta = neuron.Error * neuron.DerivativeOfActivFunc(neuron.ValueBeforeActivation);
+
+                    foreach (var con in neuron.Connections)
+                    {
+                        con.Weight -= learnRate * con.Neuron.Value * delta;
+                    }
+
+                    neuron.Threshold += learnRate * neuron.Error * neuron.DerivativeOfActivFunc(neuron.ValueBeforeActivation);
+                }
+            }
+
+            void CalculateErrors()
+            {
+                var outLayer = NeuralNetwork.OutputLayer;
+                for (var i = 0; i < learnCase.Answer.Count; ++i)
+                {
+                    outLayer[i].Error = outLayer[i].Value - learnCase.Answer[i];
+                    CalculateErrorForCurrentNeuron(outLayer[i]);
+                }
+
+                void CalculateErrorForCurrentNeuron(INeuron neuron)
+                {
+                    foreach (var connection in neuron.Connections)
+                    {
+                        var newNeuron = connection.Neuron;
+                        newNeuron.Error += connection.Weight * neuron.Error * neuron.DerivativeOfActivFunc(neuron.ValueBeforeActivation);
+                        CalculateErrorForCurrentNeuron(newNeuron);
+                    }
+                }
+            }
+
+            static double getLearnRateForLayer(ILayer layer)
+            {
+                var numerator = layer.Sum(x => Math.Pow(x.Error, 2) + x.DerivativeOfActivFunc(x.ValueBeforeActivation));
+
+                var denominator = layer[0].DerivativeOfActivFunc(0) *
+                    (1 + layer.Sum(x => Math.Pow(x.Error, 2) + Math.Pow(x.DerivativeOfActivFunc(x.ValueBeforeActivation), 2)));
+
+                var result = numerator / denominator;
+
+                if (Math.Abs(result) > 0.2)
+                {
+                    if (result > 0)
+                    {
+                        return 0.2;
+                    }
+                    else
+                    {
+                        return -0.2;
+                    }
+                }
+                else
+                {
+                    return numerator / denominator;
                 }
             }
         }
