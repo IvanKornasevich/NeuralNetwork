@@ -12,7 +12,6 @@ namespace NeuralNetwork
             {
                 new LayerTopology(10, x => x, x => 1),
                 new LayerTopology(6, Sigmoid, DerivativeOfSigmoid),
-                new LayerTopology(5, x => x, x => 1),
                 new LayerTopology(4, Sigmoid, DerivativeOfSigmoid),
                 new LayerTopology(1, x => x, x => 1)
             };
