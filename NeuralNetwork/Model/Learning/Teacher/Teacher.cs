@@ -67,7 +67,7 @@ namespace NeuralNetwork
 
                 BackProp(outNeuron, networkAnsw - learnCaseAnsw[0], learnRate);
 
-                if (counter % 11111 == 0)
+                if (counter % 111111 == 0)
                 {
                     Console.WriteLine($"network answer => {outNeuron.Value}");
                     Console.WriteLine($"learnCase answer => {learnCase.Answer[0]}");
@@ -104,7 +104,7 @@ namespace NeuralNetwork
                 BackPropAdaptive(learnCase);
 
                 var outNeuron = NeuralNetwork.OutputLayer.Neurons.First();
-                if (counter % 11111 == 0)
+                if (counter % 111111 == 0)
                 {
                     Console.WriteLine($"network answer => {outNeuron.Value}");
                     Console.WriteLine($"learnCase answer => {learnCase.Answer[0]}");
